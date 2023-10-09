@@ -65,25 +65,54 @@ public class Course {
     }
 
     public boolean enrollStudent(final Student student) {
-        String enrollStudentSql = "";
+        String enrollStudentSql = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?);";
         Object[] args = {
-
+                student.id(),
+                this.id
         };
 
         //TODO
-
+        try {
+            QueryExecutor.createAndObtainId(enrollStudentSql, args);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     public List<Student> studentList() {
-        String findStudentListSql = "";
+        String findStudentListSql = "SELECT * FROM student_course as SC " +
+                "INNER JOIN student S ON SC.student_id = S.id " +
+                "WHERE course_id = (?);";
         Object[] args = {
-
+                this.id
         };
+        ResultSet resultSet = null;
 
+        try {
+            resultSet = QueryExecutor.read(findStudentListSql, args);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         List<Student> resultList = new LinkedList<>();
-        // TODO
 
+        // TODO
+        while (true) {
+            try {
+                if (!resultSet.next()) break;
+                else {
+                    int student_id = resultSet.getInt("student_id");
+                    String name = resultSet.getString("first_name");
+                    String lastname = resultSet.getString("last_name");
+                    int index_number = resultSet.getInt("index_number");
+                    Student newStudent = new Student(student_id, name, lastname, index_number);
+                    resultList.add(newStudent);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return resultList;
     }
 

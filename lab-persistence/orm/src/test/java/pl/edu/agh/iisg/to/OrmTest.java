@@ -97,7 +97,7 @@ public class OrmTest {
         var course = courseDao.create("MOWNIT");
 
         boolean studentEnrolled = courseDao.enrollStudent(course.get(), student.get());
-        boolean reundantStudentEnroll = courseDao.enrollStudent(course.get(), student.get());
+        boolean redundantStudentEnroll = courseDao.enrollStudent(course.get(), student.get());
 
         var courseStudents = course.get().studentSet();
         var studentCourses = student.get().courseSet();
@@ -107,7 +107,7 @@ public class OrmTest {
         checkCourse(course);
 
         assertTrue(studentEnrolled);
-        assertFalse(reundantStudentEnroll);
+        assertFalse(redundantStudentEnroll);
 
         assertTrue(courseStudents.contains(student.get()));
         assertTrue(studentCourses.contains(course.get()));
